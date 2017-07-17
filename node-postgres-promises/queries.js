@@ -1,3 +1,4 @@
+'use strict';
 const promise = require('bluebird');
 
 const options = {
@@ -8,7 +9,8 @@ const config = {
   host: 'localhost',
   port: 5432,
   database: 'mywallet',
-  user: 'postgres'
+  user: 'postgres',
+  password: 'asenhadopostgre'
 };
 
 const pgp = require('pg-promise')(options);
@@ -16,7 +18,7 @@ const db = pgp(config);
 
 //Query functions
 module.exports = {
-  getAllUsers: getAllUser,
+  getAllUsers: getAllUsers,
   getSingleUser: getSingleUser,
   createUser: createUser,
   updateUser: updateUser,
@@ -39,8 +41,8 @@ function getAllUsers(req, res, next) {
 }
 
 function getSingleUser(req, res, next) {
-  var pupID = parseInt(req.params.id);
-  db.one('select * from users where id = $1', pupID)
+  var userID = parseInt(req.params.id);
+  db.one('select * from users where id = $1', userID)
     .then(function (data) {
       res.status(200)
         .json({
@@ -55,9 +57,9 @@ function getSingleUser(req, res, next) {
 }
 
 function createUser(req, res, next) {
-  req.body.age = parseInt(req.body.age);
-  db.none('insert into users(name, breed, age, sex)' +
-          'values(${name}, ${breed}, ${age}, ${sex})',
+  req.body.coins = parseInt(req.body.coins);
+  db.none('insert into users(name, usr, pass, coins)' +
+          'values(${name}, ${usr}, ${pass}, ${coins})',
     req.body)
     .then(function () {
       res.status(200)
@@ -72,9 +74,9 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-  db.none('update users set name=$1, breed=$2, age=$3, sex=$4 where id=$5',
-    [req.body.name, req.body.breed, parseInt(req.body.age),
-      req.body.sex, parseInt(req.params.id)])
+  db.none('update users set name=$1, usr=$2, pass=$3, coins=$4 where id=$5',
+    [req.body.name, req.body.usr, req.body.pass, paserInt(req.body.coins),
+       parseInt(req.params.id)])
     .then(function () {
       res.status(200)
         .json({
@@ -88,8 +90,8 @@ function updateUser(req, res, next) {
 }
 
 function removeUser(req, res, next) {
-    var pupID = parseInt(req.params.id);
-    db.result('delete from users where id=$1', pupID)
+    var userID = parseInt(req.params.id);
+    db.result('delete from users where id=$1', userID)
       .then(function (result) {
         res.status(200)
           .json({

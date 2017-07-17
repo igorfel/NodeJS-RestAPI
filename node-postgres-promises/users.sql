@@ -8,7 +8,7 @@ CREATE TABLE users (
   name VARCHAR,
   usr VARCHAR,
   pass VARCHAR,
-  coins MONEY
+  coins INTEGER
 );
 
 INSERT INTO users (name, usr, pass, coins)
